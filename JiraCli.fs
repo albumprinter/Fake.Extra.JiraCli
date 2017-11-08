@@ -34,15 +34,15 @@ type JiraCliCommands =
     | CreateVersion of project:string * version:string
     | ReleaseVersion of project:string * version:string
 
-let jiraCliExec config arg =
+let private jiraCliExec config arg =
     let jiraCliExe = findToolInSubPath "JiraCli.exe" "packages"
     ProcessHelper.enableProcessTracing <- false
     let fullArgs = sprintf "-user \"%s\" -pw \"%s\" -url \"%s\" %s" config.userName config.password config.url arg
     let success = execProcess 
                     (fun p -> p.FileName <- jiraCliExe; p.Arguments <- fullArgs)
                     (TimeSpan.FromMinutes 2.)
-    if (not success) then failwith "failed to run JiraCli"
-    ProcessHelper.enableProcessTracing <- true
+    ProcessHelper.enableProcessTracing <- true                
+    if (not success) then failwith "failed to run JiraCli"    
 
 let private getCmdFromJiraCliCommand = function
     CustomExec arg -> arg
