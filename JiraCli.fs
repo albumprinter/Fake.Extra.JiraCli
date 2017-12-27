@@ -56,19 +56,6 @@ type JiraCliCommands =
     | CreateVersion of project:string * version:string
     | ReleaseVersion of project:string * version:string
 
-let private getDefaultParametersForCommand = function
-    CustomExec arg -> arg
-    | AssignVersion (project,version,issues)
-        -> sprintf "-action AssignVersion -project \"%s\" -version \"%s\" -issues \"%s\"" 
-            project
-            version 
-            (issues |> String.concat ",")
-    | CreateVersion (project, version)
-        -> sprintf "-action CreateVersion -project \"%s\" -version \"%s\"" project version
-    | ReleaseVersion (project, version)
-        -> sprintf "-action ReleaseVersion -project \"%s\" -version \"%s\"" project version
-
-
 let private jiraCliExec config arg =
     let jiraCliExe = findToolInSubPath "JiraCli.exe" "packages"
     ProcessHelper.enableProcessTracing <- false
